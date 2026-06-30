@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include <WiFi.h>
+#include "WiFi.h"
 
 void setup()
 {
@@ -7,32 +7,44 @@ void setup()
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
   delay(100);
-  Serial.println("\n--- Iniciando Scanner de Sinal (RSSI) ---");
 }
 
 void loop()
 {
-  Serial.println("Escaneando redes...");
   int n = WiFi.scanNetworks();
-
-  if (n == 0)
+  if (n > 0)
   {
-    Serial.println("Nenhuma rede encontrada.");
+    Serial.println("[");
+    for (int i = 0; i < n; ++i)
+    {
+      int canal = WiFi.channel(i);
+      int freq = 2407 + (canal * 5);
+
+      Serial.print("  {\"ssid\": \"");
+      Serial.print(WiFi.SSID(i));
+      Serial.print("\", \"rssi\": ");
+      Serial.print(WiFi.RSSI(i));
+      Serial.print(", \"canal\": ");
+      Serial.print(canal);
+      Serial.print(", \"freq\": ");
+      Serial.print(freq);
+      Serial.print("}");
+
+      if (i < n - 1)
+      {
+        Serial.println(",");
+      }
+      else
+      {
+        Serial.println("");
+      }
+    }
+    Serial.println("]");
   }
   else
   {
-    Serial.print(n);
-    Serial.println(" redes encontradas:");
-    for (int i = 0; i < n; ++i)
-    {
-      Serial.print(i + 1);
-      Serial.print(": ");
-      Serial.print(WiFi.SSID(i));
-      Serial.print(" (");
-      Serial.print(WiFi.RSSI(i)); // Este valor é o que você vai medir!
-      Serial.println(" dBm)");
-    }
+    Serial.println("[]");
   }
-  Serial.println("-----------------------");
-  delay(5000); // Aguarda 5 segundos para o próximo scan
+
+  delay(10000);
 }
