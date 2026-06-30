@@ -27,7 +27,7 @@ O sistema é composto por três camadas principais.
 
 - Comunicação com o ESP32 através da porta serial;
 - Processamento dos dados recebidos em JSON;
-- Tratamento de mensagens de inicialização (*boot*) e possíveis erros de leitura;
+- Tratamento de mensagens de inicialização (_boot_) e possíveis erros de leitura;
 - Disponibilização dos dados para o dashboard via API HTTP.
 
 ### Front-end (Dashboard Web)
